@@ -1,0 +1,6 @@
+# Drift-Sense dependencies (classical method: numpy + Pillow + OpenCV only).
+# Pinned for reproducibility. To regenerate from your own machine:
+#   pip freeze > requirements.txt
+numpy>=2.0
+Pillow>=10.0
+opencv-python>=4.8
