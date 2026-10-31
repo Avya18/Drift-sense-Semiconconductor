@@ -61,6 +61,15 @@ def _subpixel(resp, x, y):
 
 def locate(ref, search):
     """Return (x, y) center of the reference pattern within the search image."""
+    for name, image in (("reference", ref), ("search", search)):
+        if not isinstance(image, np.ndarray) or image.ndim != 2 or image.size == 0:
+            raise ValueError(f"{name} must be a nonempty 2-D grayscale array")
+        if not np.issubdtype(image.dtype, np.number) or not np.isfinite(image).all():
+            raise ValueError(f"{name} must contain finite numeric pixels")
+        if float(np.std(image)) < 1e-6:
+            raise ValueError(f"{name} must contain image contrast")
+    if min(ref.shape) * float(SCALES.min()) < 3:
+        raise ValueError("reference is too small for the supported template scales")
     ref = ref.astype(np.float32)
     search = search.astype(np.float32)
     sh, sw = search.shape
@@ -77,6 +86,8 @@ def locate(ref, search):
             if best is None or maxv > best[0]:
                 best = (maxv, resp, maxloc[0], maxloc[1], t.shape[1], t.shape[0])
 
+    if best is None:
+        raise ValueError("search is too small to fit any reference template")
     score, resp, px, py, tw, th = best
 
     # Periodicity tie-break: collect strong peaks (>= 97% of the best score) and,
@@ -106,7 +117,11 @@ def main():
     if ref is None or search is None:
         print("error: could not read one of the input images")
         sys.exit(1)
-    x, y = locate(ref, search)
+    try:
+        x, y = locate(ref, search)
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        sys.exit(1)
     print(f"predicted center (x, y) = ({x:.2f}, {y:.2f})")
     print(f"{x:.2f},{y:.2f}")   # final line: machine-readable single coordinate
 

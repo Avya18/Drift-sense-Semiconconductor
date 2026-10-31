@@ -57,3 +57,12 @@ x, y = inference.locate(reference, search)
 ```
 
 Supply readable, nonempty grayscale arrays and images compatible with the approximate 10× magnification relationship.
+
+## Check the project and reproduce the visual demo
+
+```bash
+python -m unittest discover -s tests -v
+python demo.py
+```
+
+The demo creates ignored data under `out_demo/`, writes the three-panel preview to `docs/demo.png`, and records measured coordinates and error in `docs/demo-result.json`. Tests use temporary dataset directories.

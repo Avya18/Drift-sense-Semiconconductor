@@ -1,0 +1,15 @@
+{
+  "style": "dram",
+  "seed": 0,
+  "pairs": 1,
+  "true_center": [
+    735.0,
+    585.0
+  ],
+  "predicted_center": [
+    735.000782440826,
+    584.9623917997537
+  ],
+  "error_px": 0.03761633872946189,
+  "note": "Synthetic smoke test; not a real SEM benchmark."
+}

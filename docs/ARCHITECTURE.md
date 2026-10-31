@@ -32,4 +32,4 @@ No training stage, learned weights or GPU is required. Repetitive patterns can p
 
 `evaluate.py` imports `inference`, reads pairs from the CSV, measures Euclidean center error and localization time, and saves overlays. Timing covers localization, excluding image loading and overlay writing.
 
-The implementation assumes a nonempty dataset and readable input images. It reports results to stdout and writes PNG overlays; it does not export a separate metrics CSV.
+The evaluator validates CSV columns, nonempty datasets, readable images and finite, in-bounds ground truth. The localizer validates nonempty numeric grayscale arrays, finite pixels, contrast and compatible template dimensions. It reports results to stdout and writes PNG overlays; it does not export a separate metrics CSV.

@@ -226,6 +226,12 @@ def make_pair(style="dram", seed=0,
 # 4. Batch generation + ground-truth file                                     #
 # --------------------------------------------------------------------------- #
 def generate_dataset(style, num_pairs, out_dir, seed=0):
+    if style not in BUILDERS:
+        raise ValueError("style must be dram or finfet")
+    if num_pairs < 1:
+        raise ValueError("num_pairs must be at least 1")
+    if seed < 0:
+        raise ValueError("seed must be nonnegative")
     os.makedirs(out_dir, exist_ok=True)
     rows = []
     for i in range(num_pairs):
@@ -255,6 +261,8 @@ def main():
     p.add_argument("--out", default="dataset", help="output directory")
     p.add_argument("--seed", type=int, default=0, help="base random seed")
     args = p.parse_args()
+    if args.num_pairs < 1 or args.seed < 0:
+        p.error("--num-pairs must be at least 1 and --seed must be nonnegative")
     print(f"Generating {args.num_pairs} '{args.style}' pairs into '{args.out}/'")
     generate_dataset(args.style, args.num_pairs, args.out, args.seed)
 

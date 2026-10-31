@@ -41,13 +41,25 @@ def main():
     os.makedirs(out_dir, exist_ok=True)
 
     with open(os.path.join(data_dir, "ground_truth.csv")) as f:
-        rows = list(csv.DictReader(f))
+        reader = csv.DictReader(f)
+        required = {"reference", "search", "x_true", "y_true"}
+        if not required.issubset(reader.fieldnames or []):
+            raise ValueError("ground_truth.csv requires reference, search, x_true and y_true columns")
+        rows = list(reader)
+    if not rows:
+        raise ValueError("ground_truth.csv must contain at least one image pair")
 
     errors, times, records = [], [], []
     for r in rows:
         ref = cv2.imread(os.path.join(data_dir, r["reference"]), cv2.IMREAD_GRAYSCALE)
         search = cv2.imread(os.path.join(data_dir, r["search"]), cv2.IMREAD_GRAYSCALE)
+        if ref is None or search is None:
+            raise ValueError(f"could not read image pair: {r['reference']}, {r['search']}")
         tx, ty = float(r["x_true"]), float(r["y_true"])
+        if not np.isfinite([tx, ty]).all():
+            raise ValueError("ground-truth coordinates must be finite")
+        if not (0 <= tx < search.shape[1] and 0 <= ty < search.shape[0]):
+            raise ValueError("ground-truth coordinates must lie inside the search image")
 
         t0 = time.perf_counter()
         px, py = inference.locate(ref, search)
@@ -90,4 +102,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except (ValueError, OSError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        sys.exit(1)

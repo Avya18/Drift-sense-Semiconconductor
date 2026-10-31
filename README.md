@@ -22,6 +22,20 @@ python evaluate.py dataset
 
 On Windows activate with `.venv\Scripts\activate`. Increase `--num-pairs` to 30 for a larger run, or choose `--style finfet` and a separate output directory. Generation uses a large truth canvas; start with one pair.
 
+## Visual demo
+
+![Synthetic reference, search image and localization overlay](docs/demo.png)
+
+Reproduce with `python demo.py`. The fixed DRAM seed-0 example has about **0.04 px** localization error. This is one synthetic smoke test, not a real SEM benchmark. Exact measured coordinates are in [demo-result.json](docs/demo-result.json).
+
+## Tests
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+Tests cover the complete generation/inference/evaluation workflow, FinFET generation, the CLI coordinate output, invalid arrays, incompatible dimensions, missing images and empty/malformed datasets. The [GitHub Actions workflow](.github/workflows/tests.yml) runs tests and regenerates the demo on pushes and pull requests.
+
 ## Repository layout
 
 | Path | Purpose |
@@ -29,6 +43,8 @@ On Windows activate with `.venv\Scripts\activate`. Increase `--num-pairs` to 30 
 | [dataset_generator.py](dataset_generator.py) | Generate synthetic DRAM/FinFET image pairs and ground-truth CSV. |
 | [inference.py](inference.py) | Localize the reference in the search image. |
 | [evaluate.py](evaluate.py) | Print error, accuracy and timing; save diagnostic overlays. |
+| [demo.py](demo.py) | Reproduce the visual example and measured result. |
+| [tests/](tests/test_project.py) | Automated validation and end-to-end tests. |
 | [requirements.txt](requirements.txt) | Minimum dependency versions for NumPy, Pillow and OpenCV. |
 | [CITATIONS.md](CITATIONS.md) | Original references for imaging effects and localization. |
 | [docs/](docs/README.md) | Setup, architecture, data formats, troubleshooting and upstream attribution. |

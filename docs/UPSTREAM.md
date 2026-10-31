@@ -6,7 +6,9 @@ Original owner: Tannviiii.
 
 Imported revision: `0fb5d56284592f3b147c06d0566b71974e2b9364`.
 
-The three Python entry points, requirements, ignore rules and citations are preserved at their original paths. The original README is archived as [UPSTREAM_README.md](UPSTREAM_README.md).
+The three Python entry points, requirements, ignore rules and citations retain their original paths. Input validation has been added to the Python entry points; the core localization method is retained. The original README is archived as [UPSTREAM_README.md](UPSTREAM_README.md).
+
+Additional project work adds automated tests, GitHub Actions, input validation and a reproducible visual demo.
 
 The new README and docs organize setup, architecture, input/output contracts and troubleshooting. They clarify that requirements specify minimum versions, and distinguish upstream benchmark claims from checks performed on this copy.
 
